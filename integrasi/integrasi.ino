@@ -16,7 +16,7 @@
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
 
 // Declaration for an SSD1306 display connected to I2C (SDA, SCL pins)
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, 4);
 
 //Kudu ditambah pin pull up external
 char str1[] = "current capacity";
@@ -44,7 +44,7 @@ const int pinRelay1 = PB12;
 const int pinRelay2 = PB13;
 
 // INFRARED
-const int pinIR1 = PA0;
+const int pinIR1 = PB0;
 const int pinIR2 = PA1;
 
 int current_state1 = 0;
@@ -90,18 +90,19 @@ void setup() {
 
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
   if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
-    //    Serial1.println("SSD1306 allocation failed");
+    //        Serial2.println("SSD1306 allocation failed");
     for (;;); // Don't proceed, loop forever
   }
-  if (!SD.begin(SDCARD_CS)) {
-    //    Serial1.println("initialization failed!");
-    while (1);
-  }
+  SD.begin(SDCARD_CS);
+  //  if (!SD.begin(SDCARD_CS)) {
+  //        Serial2.println("initialization failed!");
+  //    while (1);
+  //  }
 
   // Show initial display buffer contents on the screen --
   // the library initializes this with an Adafruit splash screen.
   display.display();
-  delay(5); // Pause for 2 seconds
+  delay(1000); // Pause for 2 seconds
   display.clearDisplay();
   display.drawPixel(10, 10, SSD1306_WHITE);
   display.display();
@@ -112,8 +113,8 @@ void setup() {
   // INISIALISASI RELAY
   pinMode(pinRelay1, OUTPUT);
   pinMode(pinRelay2, OUTPUT);
-  digitalWrite(pinRelay1, LOW);
-  digitalWrite(pinRelay2, LOW);
+  digitalWrite(pinRelay1, HIGH);
+  digitalWrite(pinRelay2, HIGH);
 
 }
 
@@ -150,7 +151,7 @@ void serialhandler() {
   // SERIAL COMMUNICATION
   if (Serial1.available() > 0) {
     char c = Serial1.read();
-    Serial2.println(c);
+    //    Serial2.println(c);
     //    Serial1.println("Masuk serial");
     //memset(buffcap, 0, sizeof buffcap);
 
@@ -184,7 +185,7 @@ void serialhandler() {
     //    }
   }
   //Serial1.flush();
-//  delay(20);
+  //  delay(20);
 }
 /*** SD ***/
 void write_csv() {
@@ -236,9 +237,10 @@ void infrared() {
   //Menentukan orang masuk apa keluar dari state
   for (int i = 0; i < 20; i++) {
     dissum1 = dissum1 + analogRead(pinIR1);
-    //    Serial.println(analogRead(pinIR1));
+    //        Serial2.println(analogRead(pinIR1));
     dissum2 = dissum2 + analogRead(pinIR2);
-    delay(2);
+    //    Serial2.println(analogRead(pinIR2));
+    delay(3);
   }
   //3.3 -> sesuatu
   //5->3.3
@@ -248,10 +250,10 @@ void infrared() {
   //  Serial1.println(dist2);
   distance1 = 30 * pow(dist1, -1.2);
   distance2 = 30 * pow(dist2, -1.2);
-  //  Serial1.print("distance 1 = ");
-  //  Serial1.println(distance1);
-  //  Serial1.print("distance 2 = ");
-  //  Serial1.println(distance2);
+  Serial2.print("distance 1 = ");
+  Serial2.println(distance1);
+  Serial2.print("distance 2 = ");
+  Serial2.println(distance2);
   dissum1 = 0; dissum2 = 0;
 
   //
@@ -372,7 +374,7 @@ void parsing1() {
 void lcdhandler(void) {
   //clear, text size, text color, cursor!!! Kurang 1 aja gabakal keluar
   display.clearDisplay();
-  delay(1);
+  delay(5);
   display.setTextSize(1);      // Normal 1:1 pixel scale
   display.setCursor(20, 0);     // Start at top-left corner
   display.setTextColor(SSD1306_WHITE);
@@ -389,7 +391,7 @@ void lcdhandler(void) {
   display.setTextSize(2);
   display.print(cap);
   display.display();
-  delay(1);
+  delay(10);
   //  currentcap = currentcap + 1;
   //  cap = cap + 1;
 }
@@ -398,11 +400,11 @@ void relayhandler() {
   // put your main code here, to run repeatedly:
   if (currentcap >= cap) {
     delay(2);
-    digitalWrite(pinRelay1, HIGH);
-    digitalWrite(pinRelay2, HIGH);
-  } else {
-    delay(2);
     digitalWrite(pinRelay1, LOW);
     digitalWrite(pinRelay2, LOW);
+  } else {
+    delay(2);
+    digitalWrite(pinRelay1, HIGH);
+    digitalWrite(pinRelay2, HIGH);
   }
 }
