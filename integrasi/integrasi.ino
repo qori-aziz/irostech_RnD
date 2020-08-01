@@ -244,12 +244,18 @@ void infrared() {
   }
   //3.3 -> sesuatu
   //5->3.3
-  dist1 = dissum1 * (3.3) / (1024 * 20);
+
+  //Konversi ke voltase
+  dist1 = dissum1 * (3.3) / (4095 * 20);
   //  Serial1.println(dist1);
-  dist2 = dissum2 * (3.3) / (1024 * 20);
+  dist2 = dissum2 * (3.3) / (4095 * 20);
   //  Serial1.println(dist2);
-  distance1 = 30 * pow(dist1, -1.2);
-  distance2 = 30 * pow(dist2, -1.2);
+
+  //  //Konversi ke jarak asli
+  //  distance1 = 30 * pow(dist1, -1.2);
+  //  distance2 = 30 * pow(dist2, -1.2);
+  distance1 = 19.48 * (pow(dist1, 4)) - 152.22 * (pow(dist1, 3)) + 437.59 * (pow(dist1, 2)) - 571.88 * dist1 + 328.3;
+  distance2 = 19.48 * (pow(dist2, 4)) - 152.22 * (pow(dist2, 3)) + 437.59 * (pow(dist2, 2)) - 571.88 * dist2 + 328.3;
   Serial2.print("distance 1 = ");
   Serial2.println(distance1);
   Serial2.print("distance 2 = ");
