@@ -237,9 +237,9 @@ void infrared() {
   //Menentukan orang masuk apa keluar dari state
   for (int i = 0; i < 20; i++) {
     dissum1 = dissum1 + analogRead(pinIR1);
-    //        Serial2.println(analogRead(pinIR1));
+    Serial2.println(analogRead(pinIR1));
     dissum2 = dissum2 + analogRead(pinIR2);
-    //    Serial2.println(analogRead(pinIR2));
+    Serial2.println(analogRead(pinIR2));
     delay(3);
   }
   //3.3 -> sesuatu
@@ -256,10 +256,10 @@ void infrared() {
   //  distance2 = 30 * pow(dist2, -1.2);
   distance1 = 19.48 * (pow(dist1, 4)) - 152.22 * (pow(dist1, 3)) + 437.59 * (pow(dist1, 2)) - 571.88 * dist1 + 328.3;
   distance2 = 19.48 * (pow(dist2, 4)) - 152.22 * (pow(dist2, 3)) + 437.59 * (pow(dist2, 2)) - 571.88 * dist2 + 328.3;
-  Serial2.print("distance 1 = ");
-  Serial2.println(distance1);
-  Serial2.print("distance 2 = ");
-  Serial2.println(distance2);
+  //  Serial2.print("distance 1 = ");
+  //  Serial2.println(distance1);
+  //  Serial2.print("distance 2 = ");
+  //  Serial2.println(distance2);
   dissum1 = 0; dissum2 = 0;
 
   //

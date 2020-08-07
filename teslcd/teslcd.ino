@@ -20,8 +20,8 @@ void setup() {
   // put your setup code here, to run once:
   Serial1.begin(9600);
   //Pindahin ke I2C2 sesuai skematik alat
-  Wire.setSDA(PB11);
-  Wire.setSCL(PB10);
+//  Wire.setSDA(PB7);
+//  Wire.setSCL(PB6);
 
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
   if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
